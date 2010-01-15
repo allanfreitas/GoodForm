@@ -25,6 +25,9 @@ class Goodform {
 	// flag if fieldset is open
 	public $open_fieldset = FALSE;
 
+
+	## Utitlity Methods ##
+
    /**
 	* Returns true if this form has been submitted
 	*
@@ -53,7 +56,7 @@ class Goodform {
    /**
 	* Updates a given elements attribute
 	*
-	* i.e. error string
+	* i.e. update a fields error message with a custom string
 	*
 	* @access	public
 	* @param	string
@@ -72,9 +75,19 @@ class Goodform {
 			log_message('error', 'Can`t find element "'.$element.'" to update attribute.');
 	}
 
+	
+	## FORM FIELD SETTERS ##
+
    /**
 	* Adds an input form element to the form
+	* 
+	* Can accept two parameters defining the elements 
+	* name and value or one associative array param 
+	* defining custom attributes.
 	*
+	* This method is called by all the other 'input'
+	* field setters with the 'type' attribute defined
+	* 
 	* @access	public
 	* @param	mixed
 	* @param	string
@@ -218,7 +231,7 @@ class Goodform {
 	}
 
    /**
-	* Adds an input form element to the form
+	* Adds a hidden form element to the form
 	*
 	* Can accept two parameters defining the elements 
 	* name and value or one associative array param 
@@ -260,10 +273,13 @@ class Goodform {
 	}
 
    /**
-	* Adds an image form element to the form
+	* Can accept three parameters defining the elements 
+	* name, value and image source or one associative 
+	* array param defining custom attributes.
 	*
 	* @access	public
 	* @param	mixed
+	* @param	string
 	* @param	string
 	* @return	object
 	*/
@@ -293,6 +309,10 @@ class Goodform {
 
    /**
 	* Adds a reset form element to the form
+	*
+	* Can accept two parameters defining the elements 
+	* name and value or one associative array param 
+	* defining custom attributes.
 	*
 	* @access	public
 	* @param	mixed
@@ -325,6 +345,10 @@ class Goodform {
 
    /**
 	* Adds a submit form element to the form
+	*
+	* Can accept two parameters defining the elements 
+	* name and value or one associative array param 
+	* defining custom attributes.
 	*
 	* @access	public
 	* @param	mixed
@@ -579,6 +603,10 @@ class Goodform {
    /**
 	* Adds a button form element to the form
 	*
+	* Can accept two parameters defining the elements 
+	* name and value or one associative array param 
+	* defining custom attributes.
+	*
 	* @access	public
 	* @param	mixed
 	* @param	string
@@ -617,6 +645,24 @@ class Goodform {
    /**
 	* Adds a dropdown form element to the form
 	*
+	* Can accept three parameters defining the elements 
+	* name, options array and selected option(s) value 
+	* or one associative array param defining custom 
+	* attributes.
+	*
+	* The $option array or $name['options'] attriubute should
+	* be defined: $options['string'] = 'value'
+	*
+	* This is too allow two options with the same value in
+	* your dropdown field.
+	*
+	* e.g.
+	* 
+	* $options = array(
+	*	'UK' => 225,
+	*	'Great Britain' => 225
+	* );
+	* 
 	* @access	public
 	* @param	mixed
 	* @param	array
@@ -661,6 +707,9 @@ class Goodform {
 
    /**
 	* Adds a dropdown form element to the form
+	* 
+	* Alias method for those who like to keep
+	* it propper!
 	*
 	* @access	public
 	* @param	mixed
@@ -675,6 +724,10 @@ class Goodform {
 
    /**
 	* Adds a textarea form element to the form
+	*
+	* Can accept two parameters defining the elements 
+	* name and value or one associative array param 
+	* defining custom attributes.
 	*
 	* @access	public
 	* @param	mixed
@@ -711,12 +764,20 @@ class Goodform {
 		return $this;
 	}
 
+
+	## OTHER FORM ELEMENTS ##
+
    /**
-	* comment
+	* Adds a Label to the form
+	*
+	* Can accept two parameters defining the labels 
+	* string and for value or one associative array param 
+	* defining custom attributes.
 	*
 	* @access	public
 	* @param	string
-	* @return	string
+	* @param	string
+	* @return	object
 	*/
 	public function label($label, $for=NULL)
 	{
@@ -752,14 +813,17 @@ class Goodform {
 	}
 
    /**
-	* comment
+	* Adds a tooltip to the form 
+	*
+	* Can accept a string parameter defining the tooltips 
+	* message or one associative array param defining 
+	* custom attributes.
 	*
 	* @access	public
 	* @param	mixed
-	* @param	string
-	* @return	string
+	* @return	object
 	*/
-	public function tooltip($description, $for=NULL)
+	public function tooltip($description)
 	{
 		$spec = array();
 		
@@ -790,12 +854,16 @@ class Goodform {
 	}
 
    /**
-	* comment
+	* Adds an error message to the form 
+	*
+	* Can accept two parameters defining the error 
+	* string and the field it applys to or one 
+	* associative array param defining custom attributes.
 	*
 	* @access	public
 	* @param	mixed
 	* @param	string
-	* @return	string
+	* @return	object
 	*/
 	public function error($description, $for=NULL)
 	{
@@ -837,7 +905,8 @@ class Goodform {
 	}
 
    /**
-	* adds a clearing element to the form
+	* Adds a clearing element to the form for
+	* CSS clear floar hack
 	*
 	* @access	public
 	* @return	object
@@ -947,7 +1016,7 @@ class Goodform {
 	}
 
    /**
-	* adds some custom html string to the form
+	* Adds a custom html string to the form
 	*
 	* @access	public
 	* @return	object
@@ -959,6 +1028,9 @@ class Goodform {
 		
 		return $this;
 	}
+	
+	
+	## GET/BUILD METHODS ##
 	
    /**
 	* Builds the form and returns the HTML
@@ -1256,6 +1328,7 @@ class Goodform {
 		return $this->build_nested_element('p', $error);
 	}
 
+
    /**
 	* This method will check if a form element is selected
 	* used to decide selected elements in multi form elements
@@ -1265,12 +1338,12 @@ class Goodform {
 	* - Second param is the elements selected values. Can be
 	* 	an array or singular value.
 	*
-	* @access	public
+	* @access	private
 	* @param	mixed
 	* @param	mixed
 	* @return	boolean
 	*/
-	public function is_selected($value, $selected)
+	private function is_selected($value, $selected)
 	{
 		// is the selected value an array
 		if (is_array($selected))

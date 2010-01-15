@@ -1,3 +1,9 @@
 GoodForm
 
 A CodeIgniter Libary for building forms
+
+GoodForm is a CodeIgniter library for building GoodForms. The GoodForm library 
+replaces existing form functionality provided by the CodeIgniter Form helper. 
+GoodForm creates forms as objects, providing uniform methods to build your form 
+programatically as well as flexiblity to customise your forms. The GoodForm 
+object allows you to define labels, descriptions and field errors to create rich forms.

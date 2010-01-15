@@ -1,0 +1,14 @@
+Version 1.1
+
+Release Date: December 17, 2009
+
+- First param of generate() can now be either be an action string or and attribute array for the form element
+- generate() will default to method="post" if no method is defined.
+- Added radio() method to add individual radio inputs to a form.
+- Added error() method to add individual error messages to a form.
+- Various other bug fixes
+- Version 1.0
+
+Release Date: November 5, 2009
+
+- All GoodForm methods now return self... chain-ability!

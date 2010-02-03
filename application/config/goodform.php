@@ -1,24 +1,24 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-// block views for common form fields
-$config['input_view'] = 'block';
-$config['hidden_view'] = 'single';
-$config['radio_view'] = 'block';
-$config['checkbox_group_view'] = 'block';
-$config['checkbox_view'] = 'block';
-$config['file_view'] = 'block';
-$config['password_view'] = 'block';
-$config['text_view'] = 'block';
-$config['dropdown_view'] = 'block';
-$config['textarea_view'] = 'block';
-$config['button_view'] = 'button';
-$config['submit_view'] = 'button';
-$config['reset_view'] = 'button';
-$config['custom_view'] = 'block';
+// list of attributes that will not be included as element attributes
+$config['invalid_attributes'] = array('element', 'label', 'description', 'error', 'options', 'view', 'validation', 'input', 'selected');
 
-$config['recaptcha_view'] = 'block';
+// list of datamapper validation field attributes that should be used by the dm goodform plugin
+$config['allowed_dm_attributes'] = array('name', 'label', 'description', 'error', 'view', 'value', 'class', 'title', 'id', 'rows', 'cols', 'size', 'options', 'maxlength', 'input', 'readonly');
 
-$config['required_symbol'] = '&nbsp;<span class="gf-required">*</span>';
-$config['required_key'] = '<span class="gf-required-key">* Denotes required field</span>';
+
+// Error message classes
+$config['error_class'] = 'error';
+$config['error_prefix'] = '';
+$config['error_suffix'] = '-error';
+
+// Tooltip message classes
+$config['tooltip_class'] = 'tooltip';
+$config['tooltip_prefix'] = '';
+$config['tooltip_suffix'] = '-tooltip';
+
+// Input Groups
+$config['input_group_label_class'] = 'label';
+
 /* End of file goodform.php */
 /* Location: ./system/application/config/goodform.php */

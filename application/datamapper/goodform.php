@@ -11,11 +11,17 @@
  * - code a options_callback function to return an option array to send to
  *   the goodform object.
  *
+ * CHANGES
+ * + added code to auto generate related lookup values to has_one form fields
+ * + Added title to allowed html params
+ * + Allowed datamapper field attributes now defined in goodform config
+ * + Added 'options' method to return an array of related options to be used in dropdown 
+ *
  * @license 	MIT License
  * @category	DataMapper Extensions
  * @author  	Jim Wardlaw
  * @link    	http://www.stucktogetherwithtape.com/code/
- * @version 	0.1
+ * @version 	1.2
  */
 
 // --------------------------------------------------------------------------
@@ -78,8 +84,6 @@ class DMZ_Goodform {
 	*/
 	public function post_form($object, $fields='')
 	{
-		log_message('error', 'post form!');
-		
 		// get global CI instance
 		$CI =& get_instance();
 		
@@ -115,8 +119,7 @@ class DMZ_Goodform {
 			log_message('error', 'DMZ Goodform: Field '.$field.' does not exist in DM validation array');
 			return;
 		}
-		
-			
+					
 		// collect validation array for field from object
 		$spec = $object->validation[$field];
 		
@@ -140,9 +143,9 @@ class DMZ_Goodform {
 		// if FALSE ignore field
 		if ($input_type === FALSE)
 			return;
-			
+		
 		// define allowed values in form spec array
-		$allowed = array('name', 'label', 'description', 'error', 'view', 'value', 'class', 'id', 'rows', 'cols', 'size', 'options', 'maxlength', 'input', 'readonly');
+		$allowed = $goodform->config->item('allowed_dm_attributes', 'goodform');
 		
 		foreach ($spec as $k => $v)
 		{
@@ -150,53 +153,48 @@ class DMZ_Goodform {
 				// remove unwanted element from validation array
 				unset($spec[$k]);
 		}
+		
+		// is this value defined as a relationship and options do not already exists
+		if(isset($spec['options']) AND $spec['options'] == 'related')
+		{
+			// get model from field name
+			$model = str_replace('_id', '', $field);
 			
+			// create new instance
+			$obj = new $model();
+			
+			// get all records
+			$obj->get();
+			
+			// assign to options array
+			$spec['options'] = $obj->options();
+		}
 		
 		// add form to gf object
 		return $goodform->{$input_type}($spec);
-		
-		if (isset($field['type']) AND $field['type'] != FALSE)
-		{
-			// is this value defined as a reationship and options do not already exists
-			if($this->is_related($field['field']))
-			{
-				$model = str_replace('_id', '', $field['field']);
-			
-				$obj = new $model();
-								
-				$obj->get();
-				
-				$field['options'] = $obj->options();
-			}
-		
-			$input_type = $field['type'];
-			
-			$spec['name'] = $field['field'];
-			
-			// check for prep method
-			if (isset($field['form_prep']))
-				$spec['value'] = $this->extract_callback($field['form_prep'], $this->{$field['field']});	
-			else
-				$spec['value'] = $this->{$field['field']};
-			
-			
-			// check for option callback
-			if (isset($field['option_callback']))
-			{
-				$spec['options'] = $this->{$field['option_callback']}();
-			}
-			
-			// define allowed values in form spec array
-			$allowed = array('label', 'description', 'error', 'view', 'value', 'class', 'id', 'rows', 'cols', 'size', 'options', 'maxlength', 'input', 'readonly');
-			
-			foreach ($allowed as $a)
-			{
-				if(isset($field[$a]))
-					$spec[$a] = $field[$a];
-			}
-										
-			$goodform->{$input_type}($spec);
-		}
 	}
 
+   /**
+	* returns an options array for all records
+	* in the object. Uses the objects id field and
+	* its __toString method
+	*
+	* @access	public
+	* @param	object
+	* @param	boolean
+	* @return	array
+	*/
+	public function options($object, $include_null=TRUE)
+	{
+		$options = array();
+		
+		if($include_null)
+			$options['---'] = NULL;
+		
+		foreach($this->all as $o)
+			
+			$options[(string)$o] = $o->id;
+		
+		return $options;
+	}
 }

@@ -1,3 +1,18 @@
+Version 1.2.0
+
+Release Date: February 2, 2010
+
+- Added proper CI config file for goodform
+- Invalid element attributes now defined in config
+- Tooltip and error message classes now defined in config
+- Input group label classes now defined in config
+
+- DataMapper Plugin
+	- Added code to auto generate related lookup values to has_one form fields
+	- Added title to allowed html params
+	- Allowed datamapper field attributes now defined in goodform config
+	- Added 'options' method to return an array of related options to be used in dropdown 
+
 Version 1.1.1
 
 Release Date: January 15, 2010

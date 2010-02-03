@@ -9,12 +9,14 @@
  * @category	Librarys 
  * @author		Jim Wardlaw
  * @link		http://www.stucktogetherwithtape.com/code/goodform
- * @version 	1.1.1
+ * @version 	1.2
  *
  * CHANGES
  * 
- * - Added mixed param to 'generate' function. accepts array or action string
- * - Fixed bug in generate function with attributes array
+ * - Added Config file
+ * - Invalid element attributes now defined in config
+ * - tooltip and error message classes now defined in config
+ * - input group label classes now defined in config
  *
  */ 
 class Goodform {
@@ -28,6 +30,36 @@ class Goodform {
 
 	## Utitlity Methods ##
 
+	
+   /**
+	* Object Constructor
+	*
+	* @access	private
+	* @return	void
+	*/
+	public function __construct()
+	{
+		$this->load_config();
+	}	
+	
+   /**
+	* Loads settings from the wrapup 
+	* config file
+	*
+	* @access	private
+	* @return	void
+	*/
+	private function load_config()
+	{
+		if ($CI =& get_instance())
+		{
+			$this->config = $CI->config;
+		}
+		
+		// load goodform config vars
+		$this->config->load('goodform', TRUE, TRUE);
+	}
+	
    /**
 	* Returns true if this form has been submitted
 	*
@@ -472,8 +504,7 @@ class Goodform {
 			{
 				$spec['value'] = $spec['checked']; // assign to value attr for uniformity
 				unset($spec['checked']);			
-			}
-			
+			}			
 			
 			// check if a type has been set
 			if (!isset($spec['type']))
@@ -819,6 +850,9 @@ class Goodform {
 	* message or one associative array param defining 
 	* custom attributes.
 	*
+	* To link tooltip to an existing form item set the 'for'
+	* attribute
+	*
 	* @access	public
 	* @param	mixed
 	* @return	object
@@ -830,23 +864,35 @@ class Goodform {
 		// check if description isn't an array
 		if (!is_array($description))
 		{
-			$spec['class'] = 'tooltip';
 			$spec['element'] = 'p';
 			$spec['value'] = $description;
 		}
 		else
 		{
-			$spec = $description;
-			
-			if (isset($spec['class']))
-				// prefix class
-				$spec['class'] = 'tooltip '.$spec['class'];
-			else
-				// add class
-				$spec['class'] = 'tooltip';
-			
+			$spec = $description;			
 			$spec['element'] = 'p';
 		}
+		
+		$tooltip_prefix = $this->config->item('tooltip_prefix', 'goodform');
+		$tooltip_suffix = $this->config->item('tooltip_suffix', 'goodform');
+		
+		// add tooltip class
+		$class_array[] = $tooltip_class;
+		
+		if ($spec['for'])
+		{
+			// add name-tooltip class
+			$class_array[] = $tooltip_prefix.$spec['for'].$tooltip_suffix;
+			unset($spec['for']);
+		}
+		
+		// are classes defined in attributes
+		if (isset($spec['class']))
+			// add custom class to class array
+			$class_array[] = $spec['class'];
+		
+		
+		$spec['class'] = implode(' ', $class_array);
 	
 		$this->elements[] = $spec;
 		
@@ -859,6 +905,9 @@ class Goodform {
 	* Can accept two parameters defining the error 
 	* string and the field it applys to or one 
 	* associative array param defining custom attributes.
+	*
+	* To link tooltip to an existing form item set the 'for'
+	* attribute
 	*
 	* @access	public
 	* @param	mixed
@@ -883,21 +932,30 @@ class Goodform {
 		else
 		{
 			$spec = $description;
-			
-			if (isset($spec['class']))
-				// prefix class
-				$spec['class'] = 'error '.$spec['class'];
-			else
-				// add class
-				$spec['class'] = 'error';
-				
-			if ($spec['for'])
-			{
-				$spec['class'] .= ' error-'.$spec['for'];
-				unset($spec['for']);
-			}
 			$spec['element'] = 'p';
 		}
+
+		// load config vars
+		$error_class = $this->config->item('error_class', 'goodform');
+		$error_prefix = $this->config->item('error_prefix', 'goodform');
+		$error_suffix = $this->config->item('error_suffix', 'goodform');
+		
+		// add error class
+		$class_array[] = $error_class;
+		
+		if ($spec['for'])
+		{
+			// add name-error class
+			$class_array[] = $error_prefix.$spec['for'].$error_suffix;
+			unset($spec['for']);
+		}
+		
+		// are classes defined in attributes
+		if (isset($spec['class']))
+			// add custom class to class array
+			$class_array[] = $spec['class'];
+		
+		$spec['class'] = implode(' ', $class_array);
 	
 		$this->elements[] = $spec;
 		
@@ -1193,8 +1251,10 @@ class Goodform {
 	{		
 		$elements = array();
 		
+		// itterate through the options
 		foreach($attributes['options'] as $label => $value)
 		{
+			// construct each elements attributes
 			$element_att = array(
 				'value' => $value,
 				'name' => $attributes['name'].'[]',	// turn into array
@@ -1202,12 +1262,14 @@ class Goodform {
 			);
 			
 			// check if element is selected
-			if ($this->is_selected($value, $attributes['value']))
+			if ($this->is_selected($value, $this->get_element($attributes, 'value')))
+				// add checked attribute
 				$element_att['checked'] = 'checked';
-							
+			
+			// construct each elements label attributes	
 			$label_att = array( 
 				'value' => $label,
-				'class' => 'label'
+				'class' => $this->config->item('input_group_label_class', 'goodform')
 			);
 										
 			$elements[] = $this->build_empty_element('input', $element_att).$this->build_nested_element('span', $label_att);
@@ -1281,13 +1343,24 @@ class Goodform {
 		else
 			$tooltip = array();
 	
+		// load config vars
+		$tooltip_class = $this->config->item('tooltip_class', 'goodform');
+		$tooltip_prefix = $this->config->item('tooltip_prefix', 'goodform');
+		$tooltip_suffix = $this->config->item('tooltip_suffix', 'goodform');
+		
+		// add tooltip class
+		$class_array[] = $tooltip_class;
+		
+		// add name-tooltip class
+		$class_array[] = $tooltip_prefix.$attributes['name'].$tooltip_suffix;
+		
+		// are classes defined in attributes
 		if (isset($tooltip['class']))
-			// prepend tooltip classes
-			$tooltip['class'] = $attributes['name'].'-tooltip tooltip '.$tooltip['class'];
-		else
-			// add tooltip classes
-			$tooltip['class'] = $attributes['name'].'-tooltip tooltip';
-			
+			// add custome class to class array
+			$class_array[] = $tooltip['class'];
+		
+		// implode classes to attribute string
+		$tooltip['class'] = implode(' ', $class_array);
 		
 		$tooltip['value'] = $attributes['description'];
 		
@@ -1315,13 +1388,24 @@ class Goodform {
 		else
 			$error = array();
 	
+		// load config vars
+		$error_class = $this->config->item('error_class', 'goodform');
+		$error_prefix = $this->config->item('error_prefix', 'goodform');
+		$error_suffix = $this->config->item('error_suffix', 'goodform');
+		
+		// add error class
+		$class_array[] = $error_class;
+		
+		// add name-error class
+		$class_array[] = $error_prefix.$attributes['name'].$error_suffix;
+		
+		// are classes defined in attributes
 		if (isset($error['class']))
-			// prepend tooltip classes
-			$error['class'] = $attributes['name'].'-error error '.$error['class'];
-		else
-			// add tooltip classes
-			$error['class'] = $attributes['name'].'-error error';
-			
+			// add custome class to class array
+			$class_array[] = $error['class'];
+		
+		// implode classes to attribute string
+		$error['class']	= implode(' ', $class_array);
 		
 		$error['value'] = $attributes['error'];
 		
@@ -1343,8 +1427,11 @@ class Goodform {
 	* @param	mixed
 	* @return	boolean
 	*/
-	private function is_selected($value, $selected)
+	private function is_selected($value, $selected='')
 	{
+		if (empty($selected))
+			return FALSE;
+	
 		// is the selected value an array
 		if (is_array($selected))
 		{
@@ -1365,6 +1452,25 @@ class Goodform {
 		
 	}
 
+   /**
+	* Safely returns an array element.
+	* returns NULL if not defined
+	*
+	* @access	private
+	* @param	array
+	* @param	string
+	* @return	mixed
+	*/
+	private function get_element($array, $key)
+	{
+		// check element exists
+		if(isset($array[$key]))
+			// return it
+			return $array[$key];
+		
+		return NULL;
+	}
+	
    /**
 	* Constructs the option elements for a select dropdown
 	* element
@@ -1457,7 +1563,7 @@ class Goodform {
 			return array();
 			
 		// define invalid attributes
-		$invalid_attributes = array('element', 'label', 'description', 'error', 'options', 'view', 'validation', 'input', 'selected');
+		$invalid_attributes = $this->config->item('invalid_attributes', 'goodform');
 	
 		// loop though array and remove any invalid attributes
 		foreach($attributes as $name => $value)

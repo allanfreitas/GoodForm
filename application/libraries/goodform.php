@@ -13,8 +13,11 @@
  *
  * CHANGES
  * 
- * - Added Field Array
- * - Added Submitted Method
+ * - Added $this->fields	- array of field elements
+ * - Added run()			- runs form validation
+ * - Added submitted()		- has form been submitted
+ * - Added set_rules()		- set validation rule
+ * - Added set_message()	- set validation message
  *
  */ 
 class Goodform {
@@ -78,7 +81,11 @@ class Goodform {
 		{
 			$CI->load->library('form_validation');
 		}
+		
 		$this->form_validation = $CI->form_validation;
+		
+		// get rid of error delimiters
+		$this->form_validation->set_error_delimiters('', '');
 	}
 	
    /**
@@ -170,11 +177,26 @@ class Goodform {
 		// with this name in the form
 		if (!$this->element_exists($spec['name']))
 		{
+			// look for validation element
+			$rules = $this->get_element($spec, 'validation');
+						
+			if ($rules)
+			{
+				// get label element, use name if NULL
+				$label = $this->get_element($spec, 'label', $spec['name']);								
+				// if defined set validation rules for this element
+				$this->set_rules($spec['name'], $label, $rules);
+			}
+			
 			// add to objects element array
 			$this->elements[$spec['name']] = $spec;
 			
 			// add name of element to field array
 			$this->fields[] = $spec['name'];
+		}
+		else
+		{
+			log_message('error', 'GoodForm element '.$spec['name'].' already exists');
 		}
 		
 		// chain it up
@@ -541,6 +563,18 @@ class Goodform {
 		// with this name in the form
 		if (!$this->element_exists($spec['name']))
 		{
+			// look for validation element
+			$rules = $this->get_element($spec, 'validation');
+			
+			if ($rules)
+			{
+				// get label element, use name if NULL
+				$label = $this->get_element($spec, 'label', $spec['name']);
+								
+				// if defined set validation rules for this element
+				$this->set_rules($spec['name'], $label, $rules);
+			}
+			
 			// add to objects element array
 			$this->elements[$spec['name']] = $spec;
 			
@@ -652,6 +686,18 @@ class Goodform {
 		// with this name in the form
 		if (!$this->element_exists($spec['name']))
 		{
+			// look for validation element
+			$rules = $this->get_element($spec, 'validation');
+			
+			if ($rules)
+			{
+				// get label element, use name if NULL
+				$label = $this->get_element($spec, 'label', $spec['name']);
+								
+				// if defined set validation rules for this element
+				$this->set_rules($spec['name'], $label, $rules);
+			}
+			
 			// add to objects element array
 			$this->elements[$spec['name']] = $spec;
 			
@@ -697,6 +743,18 @@ class Goodform {
 		// with this name in the form
 		if (!$this->element_exists($spec['name']))
 		{
+			// look for validation element
+			$rules = $this->get_element($spec, 'validation');
+			
+			if ($rules)
+			{
+				// get label element, use name if NULL
+				$label = $this->get_element($spec, 'label', $spec['name']);
+								
+				// if defined set validation rules for this element
+				$this->set_rules($spec['name'], $label, $rules);
+			}
+			
 			// add to objects element array
 			$this->elements[$spec['name']] = $spec;
 			
@@ -763,6 +821,18 @@ class Goodform {
 		// with this name in the form
 		if (!$this->element_exists($spec['name']))
 		{
+			// look for validation element
+			$rules = $this->get_element($spec, 'validation');
+			
+			if ($rules)
+			{
+				// get label element, use name if NULL
+				$label = $this->get_element($spec, 'label', $spec['name']);
+								
+				// if defined set validation rules for this element
+				$this->set_rules($spec['name'], $label, $rules);
+			}
+			
 			// add to objects element array
 			$this->elements[$spec['name']] = $spec;
 			
@@ -825,6 +895,18 @@ class Goodform {
 		// with this name in the form
 		if (!$this->element_exists($spec['name']))
 		{
+			// look for validation element
+			$rules = $this->get_element($spec, 'validation');
+			
+			if ($rules)
+			{
+				// get label element, use name if NULL
+				$label = $this->get_element($spec, 'label', $spec['name']);
+								
+				// if defined set validation rules for this element
+				$this->set_rules($spec['name'], $label, $rules);
+			}
+			
 			// add to objects element array
 			$this->elements[$spec['name']] = $spec;
 			
@@ -1150,6 +1232,22 @@ class Goodform {
 		$this->form_validation->set_rules($field, $name, $rules);
 	}
 
+	/**
+	 * Set Error Message
+	 *
+	 * Lets users set their own error messages on the fly.  Note:  The key
+	 * name has to match the  function name that it corresponds to.
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	string
+	 * @return	string
+	 */
+	function set_message($lang, $val = '')
+	{		
+		$this->form_validation->set_message($lang, $val);
+	}
+
 	##########################
 	## GETTER/BUILD METHODS	##
 	##########################	
@@ -1198,7 +1296,13 @@ class Goodform {
 		foreach ($this->fields as $field)
 		{
 			if(isset($_POST[$field]))
+				// update form with posted value
 				$this->elements[$field]['value'] = $_POST[$field];
+			
+			if (form_error($field))
+				// update form with error message
+				$this->elements[$field]['error'] = form_error($field);
+			
 		}
 	}
 
@@ -1562,16 +1666,17 @@ class Goodform {
 	* @access	private
 	* @param	array
 	* @param	string
+	* @param	mixed
 	* @return	mixed
 	*/
-	private function get_element($array, $key)
+	private function get_element($array, $key, $default=NULL)
 	{
 		// check element exists
 		if(isset($array[$key]))
 			// return it
 			return $array[$key];
 		
-		return NULL;
+		return $default;
 	}
 	
    /**

@@ -191,7 +191,7 @@ class DMZ_Goodform {
 		if($include_null)
 			$options['---'] = NULL;
 		
-		foreach($this->all as $o)
+		foreach($object->all as $o)
 			
 			$options[(string)$o] = $o->id;
 		

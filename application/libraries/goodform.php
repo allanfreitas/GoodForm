@@ -13,10 +13,8 @@
  *
  * CHANGES
  * 
- * - Added Config file
- * - Invalid element attributes now defined in config
- * - tooltip and error message classes now defined in config
- * - input group label classes now defined in config
+ * - Added Field Array
+ * - Added Submitted Method
  *
  */ 
 class Goodform {
@@ -24,12 +22,15 @@ class Goodform {
 	// an array to hold all elements of the form
 	public $elements = array();
 
+	// added field array to store all posted values
+	public $fields = array();
+
 	// flag if fieldset is open
 	public $open_fieldset = FALSE;
 
-
-	## Utitlity Methods ##
-
+	##########################
+	## UTILITY METHODS	 	##
+	##########################	
 	
    /**
 	* Object Constructor
@@ -40,6 +41,8 @@ class Goodform {
 	public function __construct()
 	{
 		$this->load_config();
+		
+		$this->load_libraries();
 	}	
 	
    /**
@@ -58,6 +61,24 @@ class Goodform {
 		
 		// load goodform config vars
 		$this->config->load('goodform', TRUE, TRUE);
+	}
+	
+   /**
+	* Loads settings from the wrapup 
+	* config file
+	*
+	* @access	private
+	* @return	void
+	*/
+	private function load_libraries()
+	{
+		$CI =& get_instance();
+		
+		if( ! isset($CI->form_validation))
+		{
+			$CI->load->library('form_validation');
+		}
+		$this->form_validation = $CI->form_validation;
 	}
 	
    /**
@@ -108,7 +129,9 @@ class Goodform {
 	}
 
 	
-	## FORM FIELD SETTERS ##
+	##########################
+	## INPUT METHODS	 	##
+	##########################	
 
    /**
 	* Adds an input form element to the form
@@ -149,6 +172,9 @@ class Goodform {
 		{
 			// add to objects element array
 			$this->elements[$spec['name']] = $spec;
+			
+			// add name of element to field array
+			$this->fields[] = $spec['name'];
 		}
 		
 		// chain it up
@@ -517,6 +543,9 @@ class Goodform {
 		{
 			// add to objects element array
 			$this->elements[$spec['name']] = $spec;
+			
+			// add name of element to field array
+			$this->fields[] = $spec['name'];
 		}
 		
 		// chain it up
@@ -625,6 +654,9 @@ class Goodform {
 		{
 			// add to objects element array
 			$this->elements[$spec['name']] = $spec;
+			
+			// add name of element to field array
+			$this->fields[] = $spec['name'];
 		}
 		
 		// chain it up
@@ -667,6 +699,9 @@ class Goodform {
 		{
 			// add to objects element array
 			$this->elements[$spec['name']] = $spec;
+			
+			// add name of element to field array
+			$this->fields[] = $spec['name'];
 		}
 		
 		// chain it up
@@ -730,6 +765,9 @@ class Goodform {
 		{
 			// add to objects element array
 			$this->elements[$spec['name']] = $spec;
+			
+			// add name of element to field array
+			$this->fields[] = $spec['name'];
 		}
 		
 		// chain it up
@@ -789,6 +827,9 @@ class Goodform {
 		{
 			// add to objects element array
 			$this->elements[$spec['name']] = $spec;
+			
+			// add name of element to field array
+			$this->fields[] = $spec['name'];
 		}
 		
 		// chain it up
@@ -1086,9 +1127,32 @@ class Goodform {
 		
 		return $this;
 	}
-	
-	
-	## GET/BUILD METHODS ##
+
+
+	##########################
+	## VALIDATION METHODS	##
+	##########################	
+
+	/**
+	 * Adds validation rules to a form element
+	 *
+	 * Can be rules for a specific field or an array
+	 * of multiple fields and rules
+	 *
+	 * @access	public
+	 * @param	mixed
+	 * @param	string
+	 * @param	string
+	 * @return	void
+	 */
+	public function set_rules($field, $name, $rules = '')
+	{
+		$this->form_validation->set_rules($field, $name, $rules);
+	}
+
+	##########################
+	## GETTER/BUILD METHODS	##
+	##########################	
 	
    /**
 	* Builds the form and returns the HTML
@@ -1116,9 +1180,44 @@ class Goodform {
 			// add default method to the form
 			$attributes['method'] = 'post';
 		
-		log_message('error', print_r($attributes, TRUE));
-		
 		return '<form '.$this->array_to_attributes($attributes).'>'.$this->build_elements().'</form>';
+	}
+
+   /**
+	* Runs the form validation
+	*
+	* @access	public
+	* @return	boolean
+	*/
+	public function run()
+	{	
+		// run form validation
+		$this->valid = $this->form_validation->run();
+		
+		// update form fields with posted values
+		foreach ($this->fields as $field)
+		{
+			if(isset($_POST[$field]))
+				$this->elements[$field]['value'] = $_POST[$field];
+		}
+	}
+
+   /**
+	* Returns TRUE/FALSE if the form
+	* has been submitted
+	*
+	* @access	public
+	* @return	boolean
+	*/
+	public function submitted()
+	{
+		foreach($this->fields as $field)
+		{
+			if (isset($_POST[$field]))
+				return TRUE;
+		}
+		
+		return FALSE;
 	}
 
    /**
@@ -1412,6 +1511,10 @@ class Goodform {
 		return $this->build_nested_element('p', $error);
 	}
 
+
+	##########################
+	## INTERNAL METHODS	 	##
+	##########################	
 
    /**
 	* This method will check if a form element is selected

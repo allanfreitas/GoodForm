@@ -8,7 +8,7 @@
  * @author		Jim Wardlaw
  * @link		http://www.stucktogetherwithtape.com
  */
- label {
+label {
 	display: block;
 	font-size: 14px;
 	font-weight: bold;
@@ -34,7 +34,7 @@ form a {
 	
 .tooltip {	
 	color: #999;
-	font-size: 13px;
+	font-size: 11px;
 	font-style: italic;
 	font-weight: normal;
 	line-height: 15px;
@@ -44,6 +44,7 @@ form a {
 	border:solid 1px #CC0000; 
 	background:#F7CBCA;
 	color:#CC0000;
+	font-size: 11px;
 	font-weight:bold;
 	padding:4px;
 }
@@ -76,18 +77,10 @@ textarea {
 	border-style: solid;
 }
 
-/* Classes for Uniform jQuery plugin */
-form div.checker,
-form div.radio {
-	float: none;
-	margin-bottom: 10px;
+textarea {
+	height: 100px;
+	width: 250px;
 }
-
-	/* no padding in tables! */
-	table div.checker,
-	table div.radio {
-		margin: 0;
-	}
 
 fieldset {
 	border-color: #CCC;
@@ -109,28 +102,42 @@ legend {
 }
 
 .label {
-	font-size: 12px;
+	color: #666;
+	font-size: 11px;
 	font-weight: bold;
-	margin: 3px 5px;
+	margin: 0 0 10px 10px;
 }
 
 .vert-input-group {
 	margin-bottom: 10px;
 }
 
-.vert-input-group input {
-	clear: left;
+	.vert-input-group input {
+		clear: left;
+	}
+	
+	.vert-input-group .label {
+		clear: right;
+	}
+	
+	.vert-input-group input,
+	.vert-input-group .label {
+		display: block;
+		float: left;
+	}
+
+.optgroup {
 }
 
-.vert-input-group .label {
-	clear: right;
-}
-
-.vert-input-group input,
-.vert-input-group .label {
-	display: block;
-	float: left;
-}
+	.optgroup .optgroup-label {
+		color: #666;
+		font-weight: bold;
+		margin: 0 0 5px 0;
+	}
+	
+	.optgroup .input-group{
+		padding-left: 10px;
+	}
 
 /* Google Buttons */
 button,
@@ -187,3 +194,16 @@ input.small {
 	padding: 2px 3px;
 	margin: 5px;
 }
+
+/* Classes for Uniform jQuery plugin */
+form div.checker,
+form div.radio {
+	float: none;
+	margin-bottom: 10px;
+}
+
+	/* no padding in tables! */
+	table div.checker,
+	table div.radio {
+		margin: 0;
+	}

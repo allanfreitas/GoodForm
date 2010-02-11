@@ -19,6 +19,7 @@
  * - Added set_rules()		- set validation rule
  * - Added set_message()	- set validation message
  * - build_select_options()	- now accepts optgroups
+ * - build_input_group()	- now accepts optgroups
  * - build_label()			- now includes a string suffix if required, defined in config
  */ 
 class Goodform {
@@ -1303,8 +1304,10 @@ class Goodform {
 			if (form_error($field))
 				// update form with error message
 				$this->elements[$field]['error'] = form_error($field);
-			
 		}
+		
+		// return validation result
+		return $this->valid;
 	}
 
    /**
@@ -1442,6 +1445,75 @@ class Goodform {
 	}
 	
    /**
+	* Constructs the option elements for a select dropdown
+	* element
+	*
+	* @access	private
+	* @param	array
+	* @return	string
+	*/
+	private function build_select_options($attributes)
+	{
+		// if no options defined return NULL
+		if(!isset($attributes['options']))
+			return;
+		else
+			$options = $attributes['options'];
+		
+		$value = NULL;
+		$selected=array();
+		
+		// get value
+		if (isset($attributes['value']))
+		{
+			if(is_array($attributes['value']))
+				$selected = $attributes['value'];
+			else
+				$value = $attributes['value'];
+		}
+		else if(isset($attributes['selected']))
+		{	
+			if(is_array($attributes['selected']))
+				$selected = $attributes['selected'];
+			else
+				$value = $attributes['selected'];
+		}
+		else		
+			$value = NULL;
+		
+		$opt_arr = array();
+		
+		foreach ($options as $name => $v)
+		{
+			// check for optgroup array
+			if (is_array($v))
+			{
+				// open optgroup
+				$opt_arr[] = '<optgroup label="'.$name.'">';
+				
+				// define optgroup attributes
+				$optgroup['options'] = $v;
+				$optgroup['value'] = $value;
+				
+				// get optgroup options, recuse!
+				$opt_arr[] = $this->build_select_options($optgroup);
+				
+				// close opt group 
+				$opt_arr[] = '</optgroup>';
+			}
+			else
+			{
+				if (in_array($v, $selected) OR $v == $value)
+					$opt_arr[] = '<option value="'.$v.'" selected="selected">'.$name.'</option>';			
+				else
+					$opt_arr[] = '<option value="'.$v.'">'.$name.'</option>';
+			}
+		}
+		
+		return implode("\n\t", $opt_arr);
+	}
+	
+   /**
 	* Builds an input group form element 
 	* i.e. a group of radio or checkboxes
 	*
@@ -1457,25 +1529,52 @@ class Goodform {
 		// itterate through the options
 		foreach($attributes['options'] as $label => $value)
 		{
-			// construct each elements attributes
-			$element_att = array(
-				'value' => $value,
-				'name' => $attributes['name'].'[]',	// turn into array
-				'type' => $attributes['type']
-			);
-			
-			// check if element is selected
-			if ($this->is_selected($value, $this->get_element($attributes, 'value')))
-				// add checked attribute
-				$element_att['checked'] = 'checked';
-			
-			// construct each elements label attributes	
-			$label_att = array( 
-				'value' => $label,
-				'class' => $this->config->item('input_group_label_class', 'goodform')
-			);
-										
-			$elements[] = $this->build_empty_element('input', $element_att).$this->build_nested_element('span', $label_att);
+			// check for optgroup array
+			if (is_array($value))
+			{
+				// load config options
+				$optgroup_prefix = $this->config->item('input_group_optgroup_prefix', 'goodform');
+				$optgroup_suffix = $this->config->item('input_group_optgroup_suffix', 'goodform');
+				$label_prefix = $this->config->item('input_group_optgroup_label_prefix', 'goodform');
+				$label_suffix = $this->config->item('input_group_optgroup_label_suffix', 'goodform');
+				
+				// open optgroup
+				$elements[] = $optgroup_prefix.$label_prefix.$label.$label_suffix;
+				
+				// define optgroup attributes
+				$optgroup['options'] = $value;
+				$optgroup['value'] = $this->get_element($attributes, 'value');
+				$optgroup['type'] = $this->get_element($attributes, 'type');
+				$optgroup['name'] = $this->get_element($attributes, 'name');
+				
+				// get optgroup options, recuse!
+				$elements[] = $this->build_input_group($optgroup);
+				
+				// close opt group 
+				$elements[] = $optgroup_suffix;
+			}
+			else
+			{
+				// construct each elements attributes
+				$element_att = array(
+					'value' => $value,
+					'name' => $attributes['name'].'[]',	// turn into array
+					'type' => $attributes['type']
+				);
+				
+				// check if element is selected
+				if ($this->is_selected($value, $this->get_element($attributes, 'value')))
+					// add checked attribute
+					$element_att['checked'] = 'checked';
+				
+				// construct each elements label attributes	
+				$label_att = array( 
+					'value' => $label,
+					'class' => $this->config->item('input_group_label_class', 'goodform')
+				);
+											
+				$elements[] = $this->build_empty_element('input', $element_att).$this->build_nested_element('span', $label_att);
+			}
 		}
 		
 		// add a clear element, just for good measure...
@@ -1684,75 +1783,6 @@ class Goodform {
 			return $array[$key];
 		
 		return $default;
-	}
-	
-   /**
-	* Constructs the option elements for a select dropdown
-	* element
-	*
-	* @access	private
-	* @param	array
-	* @return	string
-	*/
-	private function build_select_options($attributes)
-	{
-		// if no options defined return NULL
-		if(!isset($attributes['options']))
-			return;
-		else
-			$options = $attributes['options'];
-		
-		$value = NULL;
-		$selected=array();
-		
-		// get value
-		if (isset($attributes['value']))
-		{
-			if(is_array($attributes['value']))
-				$selected = $attributes['value'];
-			else
-				$value = $attributes['value'];
-		}
-		else if(isset($attributes['selected']))
-		{	
-			if(is_array($attributes['selected']))
-				$selected = $attributes['selected'];
-			else
-				$value = $attributes['selected'];
-		}
-		else		
-			$value = NULL;
-		
-		$opt_arr = array();
-		
-		foreach ($options as $name => $v)
-		{
-			// check for optgroup array
-			if (is_array($v))
-			{
-				// open optgroup
-				$opt_arr[] = '<optgroup label="'.$name.'">';
-				
-				// define optgroup attributes
-				$optgroup['options'] = $v;
-				$optgroup['value'] = $value;
-				
-				// get optgroup options, recuse!
-				$opt_arr[] = $this->build_select_options($optgroup);
-				
-				// close opt group 
-				$opt_arr[] = '</optgroup>';
-			}
-			else
-			{
-				if (in_array($v, $selected) OR $v == $value)
-					$opt_arr[] = '<option value="'.$v.'" selected="selected">'.$name.'</option>';			
-				else
-					$opt_arr[] = '<option value="'.$v.'">'.$name.'</option>';
-			}
-		}
-		
-		return implode("\n\t", $opt_arr);
 	}
 
    /**

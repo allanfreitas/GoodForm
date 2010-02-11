@@ -21,6 +21,12 @@ $config['required_suffix'] = ' <span class="c-red">*</span>';
 
 // Input Groups
 $config['input_group_label_class'] = 'label';
+// Wrapper for optgroups
+$config['input_group_optgroup_prefix'] = '<div class="optgroup">';
+$config['input_group_optgroup_suffix'] = '</div>';
+// Optgroup Label
+$config['input_group_optgroup_label_prefix'] = '<p class="optgroup-label">';
+$config['input_group_optgroup_label_suffix'] = '</p>';
 
 /* End of file goodform.php */
 /* Location: ./system/application/config/goodform.php */

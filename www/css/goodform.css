@@ -1,0 +1,189 @@
+/**
+ * GoodForm CSS
+ *
+ * Basic form stylesheet
+ *
+ * @license		MIT License
+ * @category	CSS
+ * @author		Jim Wardlaw
+ * @link		http://www.stucktogetherwithtape.com
+ */
+ label {
+	display: block;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 20px;
+	margin-bottom: 5px;
+}
+	.gf-inline label {
+		display: block;
+		float: left;
+		font-size: 14px;
+		font-weight: bold;
+		line-height: 20px;
+		margin: 0 10px 10px 0;
+		text-align: right;
+		width: 140px;
+	}
+
+form a {
+	font-size: 14px;
+	line-height: 20px;
+	margin-bottom: 5px;
+}
+	
+.tooltip {	
+	color: #999;
+	font-size: 13px;
+	font-style: italic;
+	font-weight: normal;
+	line-height: 15px;
+}
+
+.error {
+	border:solid 1px #CC0000; 
+	background:#F7CBCA;
+	color:#CC0000;
+	font-weight:bold;
+	padding:4px;
+}
+
+input,
+textarea,
+select {
+	margin: 0 0 10px 0;
+}
+
+
+input[type=text],
+input[type=password],
+input[type=file],
+input[type=time],
+textarea,
+select option  {
+	color: #333;
+	font-size: 16px;
+	line-height: 1;
+	padding: 3px 5px;
+}
+
+input[type=text],
+input[type=password],
+input[type=time],
+textarea {
+	border-color: #CCC;
+	border-width: 1px;
+	border-style: solid;
+}
+
+/* Classes for Uniform jQuery plugin */
+form div.checker,
+form div.radio {
+	float: none;
+	margin-bottom: 10px;
+}
+
+	/* no padding in tables! */
+	table div.checker,
+	table div.radio {
+		margin: 0;
+	}
+
+fieldset {
+	border-color: #CCC;
+	border-width: 1px;
+	border-style: solid;
+	padding: 10px;
+	margin: 0 0 10px 0;
+}
+
+legend {
+	color: #C00;
+	font-size: 18px;
+	padding: 0 5px;
+}
+
+.tooltip {
+	font-style: italic;
+	color: #AAA;
+}
+
+.label {
+	font-size: 12px;
+	font-weight: bold;
+	margin: 3px 5px;
+}
+
+.vert-input-group {
+	margin-bottom: 10px;
+}
+
+.vert-input-group input {
+	clear: left;
+}
+
+.vert-input-group .label {
+	clear: right;
+}
+
+.vert-input-group input,
+.vert-input-group .label {
+	display: block;
+	float: left;
+}
+
+/* Google Buttons */
+button,
+a.g-btn,
+input[type=submit],
+input[type=reset]  {
+	padding: 6px 10px;
+	border: solid 1px rgb(153, 153, 153);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(255, 255, 255)), to(rgb(221, 221, 221)));
+	color: #333;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 14px;
+	line-height: 1;
+	margin-bottom: 10px;
+	text-decoration: none;
+	text-align: center;
+	text-shadow: 0px 1px 1px rgba(255,255,255,1);
+	-webkit-border-radius: 2px 2px;
+}
+	a.g-btn:link,
+	a.g-btn:visited{
+		color: #333;
+		text-decoration: none;
+	}
+	/* link hover state */
+	a.g-btn:hover,
+	a.g-btn:focus,
+	a.g-btn:active {
+		color: #000;
+		text-decoration: none;
+	}
+	
+	.gf-inline button,
+	.gf-inline a.g-btn,
+	.gf-inline input[type=submit],
+	.gf-inline input[type=reset] 
+	{
+		margin-left: 150px;
+	}
+
+/* Disabled Buttons */
+button.disabled,
+a.g-btn.disabled,
+input[type=submit].disabled,
+input[type=reset].disabled {
+	color: #999;
+	text-decoration: line-through;
+}
+
+/* Site Specific classes */
+input.small {
+	font-size: 13px;
+	padding: 2px 3px;
+	margin: 5px;
+}

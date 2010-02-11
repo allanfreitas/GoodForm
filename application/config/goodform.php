@@ -6,7 +6,6 @@ $config['invalid_attributes'] = array('element', 'label', 'description', 'error'
 // list of datamapper validation field attributes that should be used by the dm goodform plugin
 $config['allowed_dm_attributes'] = array('name', 'label', 'description', 'error', 'view', 'value', 'class', 'title', 'id', 'rows', 'cols', 'size', 'options', 'maxlength', 'input', 'readonly');
 
-
 // Error message classes
 $config['error_class'] = 'error';
 $config['error_prefix'] = '';
@@ -16,6 +15,9 @@ $config['error_suffix'] = '-error';
 $config['tooltip_class'] = 'tooltip';
 $config['tooltip_prefix'] = '';
 $config['tooltip_suffix'] = '-tooltip';
+
+// String added to each required Lable element
+$config['required_suffix'] = ' <span class="c-red">*</span>';
 
 // Input Groups
 $config['input_group_label_class'] = 'label';

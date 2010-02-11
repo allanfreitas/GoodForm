@@ -19,7 +19,7 @@
  * - Added set_rules()		- set validation rule
  * - Added set_message()	- set validation message
  * - build_select_options()	- now accepts optgroups
- *
+ * - build_label()			- now includes a string suffix if required, defined in config
  */ 
 class Goodform {
 
@@ -1377,8 +1377,7 @@ class Goodform {
 				$element .= $this->build_empty_element($type, $attributes);
 				break;
 				
-			case 'select':
-			
+			case 'select':			
 				$attributes['value'] = $this->build_select_options($attributes);
 				$element .= $this->build_nested_element($type, $attributes);
 				break;
@@ -1523,7 +1522,14 @@ class Goodform {
 		$label['for'] = $attributes['name'];
 		
 		unset($attributes['name']);
-				
+		
+		// check if this field is required
+		if (stristr($this->get_element($attributes, 'validation'), 'required'))
+		{
+			// add required sign
+			$attributes['label'] .=  $this->config->item('required_suffix', 'goodform');
+		}
+		
 		$label['value'] = $attributes['label'];
 		
 		return $this->build_nested_element('label', $label);

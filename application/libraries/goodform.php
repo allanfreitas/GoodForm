@@ -18,6 +18,7 @@
  * - Added submitted()		- has form been submitted
  * - Added set_rules()		- set validation rule
  * - Added set_message()	- set validation message
+ * - build_select_options()	- now accepts optgroups
  *
  */ 
 class Goodform {
@@ -1700,30 +1701,49 @@ class Goodform {
 		
 		// get value
 		if (isset($attributes['value']))
-			
+		{
 			if(is_array($attributes['value']))
 				$selected = $attributes['value'];
 			else
 				$value = $attributes['value'];
-
-		
+		}
 		else if(isset($attributes['selected']))
-			
+		{	
 			if(is_array($attributes['selected']))
 				$selected = $attributes['selected'];
 			else
 				$value = $attributes['selected'];
+		}
 		else		
 			$value = NULL;
-			
+		
 		$opt_arr = array();
 		
 		foreach ($options as $name => $v)
 		{
-			if (in_array($v, $selected) OR $v == $value)
-				$opt_arr[] = '<option value="'.$v.'" selected="selected">'.$name.'</option>';			
+			// check for optgroup array
+			if (is_array($v))
+			{
+				// open optgroup
+				$opt_arr[] = '<optgroup label="'.$name.'">';
+				
+				// define optgroup attributes
+				$optgroup['options'] = $v;
+				$optgroup['value'] = $value;
+				
+				// get optgroup options, recuse!
+				$opt_arr[] = $this->build_select_options($optgroup);
+				
+				// close opt group 
+				$opt_arr[] = '</optgroup>';
+			}
 			else
-				$opt_arr[] = '<option value="'.$v.'">'.$name.'</option>';
+			{
+				if (in_array($v, $selected) OR $v == $value)
+					$opt_arr[] = '<option value="'.$v.'" selected="selected">'.$name.'</option>';			
+				else
+					$opt_arr[] = '<option value="'.$v.'">'.$name.'</option>';
+			}
 		}
 		
 		return implode("\n\t", $opt_arr);

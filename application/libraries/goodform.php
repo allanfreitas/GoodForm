@@ -9,7 +9,7 @@
  * @category	Librarys 
  * @author		Jim Wardlaw
  * @link		http://www.stucktogetherwithtape.com/code/goodform
- * @version 	1.2
+ * @version 	1.3
  *
  * CHANGES
  * 

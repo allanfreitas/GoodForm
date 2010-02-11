@@ -21,7 +21,7 @@
  * @category	DataMapper Extensions
  * @author  	Jim Wardlaw
  * @link    	http://www.stucktogetherwithtape.com/code/
- * @version 	1.2
+ * @version 	1.3
  */
 
 // --------------------------------------------------------------------------

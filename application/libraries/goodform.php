@@ -9,18 +9,15 @@
  * @category	Librarys 
  * @author		Jim Wardlaw
  * @link		http://www.stucktogetherwithtape.com/code/goodform
- * @version 	1.3
+ * @version 	1.3.1
  *
  * CHANGES
- * 
- * - Added $this->fields	- array of field elements
- * - Added run()			- runs form validation
- * - Added submitted()		- has form been submitted
- * - Added set_rules()		- set validation rule
- * - Added set_message()	- set validation message
- * - build_select_options()	- now accepts optgroups
- * - build_input_group()	- now accepts optgroups
- * - build_label()			- now includes a string suffix if required, defined in config
+ *
+ * - added config options to input groups
+ *		- cleaned up output code and included direction attribute (horizontal/verticle)
+ *
+ * - generate(FALSE) returns form contents without <form> element
+ * - added item	- return specific form item
  */ 
 class Goodform {
 
@@ -1257,6 +1254,9 @@ class Goodform {
    /**
 	* Builds the form and returns the HTML
 	*
+	* Pass FALSE tp return the form contents without
+	* a form element!
+	*
 	* @access	public
 	* @param	mixed
 	* @return	string
@@ -1280,8 +1280,30 @@ class Goodform {
 			// add default method to the form
 			$attributes['method'] = 'post';
 		
+		// return naked?
+		if ($uri === FALSE)
+			return $this->build_elements();
+		
 		return '<form '.$this->array_to_attributes($attributes).'>'.$this->build_elements().'</form>';
 	}
+
+   /**
+	* Builds a given element of the form.
+	* Returns the HTML and removes element from the form
+	*
+	* @access	public
+	* @param	mixed
+	* @return	string
+	*/
+	public function field($name)
+	{
+		//log_message('error', print_r($this->elements[$name], TRUE));
+	
+		if (isset($this->elements[$name]))
+		
+			return $this->build_element($this->elements[$name]);
+
+	}	
 
    /**
 	* Runs the form validation
@@ -1289,10 +1311,11 @@ class Goodform {
 	* @access	public
 	* @return	boolean
 	*/
-	public function run()
+	public function run($validate=TRUE)
 	{	
-		// run form validation
-		$this->valid = $this->form_validation->run();
+		if ($validate)
+			// run form validation
+			$this->valid = $this->form_validation->run();
 		
 		// update form fields with posted values
 		foreach ($this->fields as $field)
@@ -1306,8 +1329,9 @@ class Goodform {
 				$this->elements[$field]['error'] = form_error($field);
 		}
 		
-		// return validation result
-		return $this->valid;
+		if ($validate)
+			// return validation result
+			return $this->valid;
 	}
 
    /**
@@ -1512,7 +1536,8 @@ class Goodform {
 		
 		return implode("\n\t", $opt_arr);
 	}
-	
+
+
    /**
 	* Builds an input group form element 
 	* i.e. a group of radio or checkboxes
@@ -1523,23 +1548,39 @@ class Goodform {
 	* @return	string
 	*/
 	private function build_input_group($attributes)
-	{		
+	{
+		// is this a vertical/horizontal group?
+		$style = $this->get_element($attributes, 'direction', 'v');
+	
+		// get config options
+		$prefix = $this->config->item('input_group_'.$style.'_prefix', 'goodform');
+		$suffix = $this->config->item('input_group_'.$style.'_suffix', 'goodform');
+		
+		$option_prefix = $this->config->item('input_group_'.$style.'_option_prefix', 'goodform');
+		$option_suffix = $this->config->item('input_group_'.$style.'_option_suffix', 'goodform');
+		
+		$selected_option_prefix = $this->config->item('input_group_'.$style.'_selected_option_prefix', 'goodform');
+		$selected_option_suffix = $this->config->item('input_group_'.$style.'_selected_option_suffix', 'goodform');
+		
+		$label_prefix= $this->config->item('input_group_'.$style.'_label_prefix', 'goodform');
+		$label_suffix = $this->config->item('input_group_'.$style.'_label_suffix', 'goodform');
+			
 		$elements = array();
 		
 		// itterate through the options
-		foreach($attributes['options'] as $label => $value)
+		foreach($attributes['options'] as $name => $value)
 		{
 			// check for optgroup array
 			if (is_array($value))
 			{
 				// load config options
-				$optgroup_prefix = $this->config->item('input_group_optgroup_prefix', 'goodform');
-				$optgroup_suffix = $this->config->item('input_group_optgroup_suffix', 'goodform');
-				$label_prefix = $this->config->item('input_group_optgroup_label_prefix', 'goodform');
-				$label_suffix = $this->config->item('input_group_optgroup_label_suffix', 'goodform');
+				$optgroup_prefix = $this->config->item('input_group_v_optgroup_prefix', 'goodform');
+				$optgroup_suffix = $this->config->item('input_group_v_optgroup_suffix', 'goodform');
+				$optgroup_label_prefix = $this->config->item('input_group_v_optgroup_label_prefix', 'goodform');
+				$optgroup_label_suffix = $this->config->item('input_group_v_optgroup_label_suffix', 'goodform');
 				
 				// open optgroup
-				$elements[] = $optgroup_prefix.$label_prefix.$label.$label_suffix;
+				$elements[] = $optgroup_prefix.$optgroup_label_prefix.$name.$optgroup_label_suffix;
 				
 				// define optgroup attributes
 				$optgroup['options'] = $value;
@@ -1555,33 +1596,37 @@ class Goodform {
 			}
 			else
 			{
-				// construct each elements attributes
+				// construct each option elements attributes
 				$element_att = array(
 					'value' => $value,
 					'name' => $attributes['name'].'[]',	// turn into array
 					'type' => $attributes['type']
 				);
 				
+				// construct the options label	
+				$label = $label_prefix.$name.$label_suffix;
+				
 				// check if element is selected
 				if ($this->is_selected($value, $this->get_element($attributes, 'value')))
+				{
 					// add checked attribute
 					$element_att['checked'] = 'checked';
-				
-				// construct each elements label attributes	
-				$label_att = array( 
-					'value' => $label,
-					'class' => $this->config->item('input_group_label_class', 'goodform')
-				);
-											
-				$elements[] = $this->build_empty_element('input', $element_att).$this->build_nested_element('span', $label_att);
+					
+					$elements[] = $selected_option_prefix.$this->build_empty_element('input', $element_att).$label.$selected_option_suffix;
+				}
+				else 
+				{
+					$elements[] = $option_prefix.$this->build_empty_element('input', $element_att).$label.$option_suffix;
+				}
 			}
 		}
 		
-		// add a clear element, just for good measure...
-		$elements[] = $this->build_nested_element('div', array('class' => 'clear'));
+		// return element
+		return $prefix.implode("\n", $elements).$suffix;
+		
 		
 		// replace element attribute value with input group		
-		$attributes['value'] = implode("\n", $elements);
+		$attributes['value'] = $prefix.implode("\n", $elements).$suffix;
 		
 		// remove name, type and checked attributes
 		unset($attributes['name']);
@@ -1590,10 +1635,10 @@ class Goodform {
 		// add default group container class
 		if (isset($attributes['class']))
 			// prepend to existing class string
-			$attributes['class'] = 'input-group '.$attributes['class'];
+			$attributes['class'] = 'input-group-'.$style.' '.$attributes['class'];
 		else
 			// add class to attributes
-			$attributes['class'] = 'input-group';
+			$attributes['class'] = 'input-group-'.$style;
 		
 		// wrap input group with container that includes defined attributes
 		return $this->build_nested_element('div', $attributes);

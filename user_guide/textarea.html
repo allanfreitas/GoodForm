@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head >
+		<title>Textarea</title>
+		<meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+		
+		<link href="./css/userguide.css" media="screen" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="./js/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="./js/jquery.nav.js"></script>
+		<script type="text/javascript" src="./js/chili.js"></script>
+		<script type="text/javascript" src="./js/chili/jquery.chili-2.2.js"></script>
+		<script type="text/javascript" src="./js/chili/recipes.js"></script>
+		
+	</head>
+
+<body>
+
+	<!-- START NAVIGATION -->
+	<div id="nav">
+		<div id="nav_inner">
+			<table cellpadding="0" cellspaceing="0" border="0" style="width:98%">
+	<tr>
+			<td class="td" valign="top">
+					<h3></h3>
+			<ul>
+								<li><a href="./index.html">User Guide Home</a></li>
+								<li><a href="./toc.html">Table of Contents</a></li>
+							</ul>
+					<h3>Basic Info</h3>
+			<ul>
+								<li><a href="./change_log.html">Change Log</a></li>
+								<li><a href="./server_req.html">Server Requirements</a></li>
+								<li><a href="./troubleshooting.html">Troubleshooting</a></li>
+								<li><a href="./roadmap.html">Roadmap</a></li>
+							</ul>
+					<h3>Installation</h3>
+			<ul>
+								<li><a href="./downloading.html">Downloading</a></li>
+								<li><a href="./installation.html">Installation</a></li>
+								<li><a href="./getting_started.html">Getting Started</a></li>
+								<li><a href="./config.html">Configuration</a></li>
+							</ul>
+				</td>
+			<td class="td" valign="top">
+					<h3>Input Methods</h3>
+			<ul>
+								<li><a href="./input_list.html">List of Inputs</a></li>
+								<li><a href="./text_input.html">Text Input</a></li>
+								<li><a href="./password_input.html">Password Input</a></li>
+								<li><a href="./upload_input.html">Upload Input</a></li>
+								<li><a href="./hidden_input.html">Hidden Input</a></li>
+								<li><a href="./image_input.html">Image Input</a></li>
+								<li><a href="./reset_input.html">Reset Input</a></li>
+								<li><a href="./submit_input.html">Submit Input</a></li>
+								<li><a href="./checkbox_input.html">Checkbox Input</a></li>
+								<li><a href="./radio_input.html">Radio Input</a></li>
+								<li><a href="./dropdown.html">Dropdown</a></li>
+								<li><a href="./textarea.html">Textarea</a></li>
+								<li><a href="./button.html">Button</a></li>
+							</ul>
+				</td>
+			<td class="td" valign="top">
+					<h3>Presentation Methods</h3>
+			<ul>
+								<li><a href="./label.html">Label</a></li>
+								<li><a href="./tooltip.html">Tooltip</a></li>
+								<li><a href="./error.html">Error</a></li>
+								<li><a href="./clear.html">Clear</a></li>
+								<li><a href="./fieldset.html">Fieldset</a></li>
+							</ul>
+					<h3>Other Features</h3>
+			<ul>
+								<li><a href="./special_attributes.html">Special Attributes</a></li>
+								<li><a href="./validation.html">Form Validation</a></li>
+							</ul>
+				</td>
+			<td class="td" valign="top">
+					<h3>Generating your Form</h3>
+			<ul>
+								<li><a href="./generate.html">Generate</a></li>
+							</ul>
+					<h3>DMZ Datamapper Extension</h3>
+			<ul>
+								<li><a href="./installing_dmz_ext.html">Installation</a></li>
+								<li><a href="./models_dmz_ext.html">Preparing the Models</a></li>
+								<li><a href="./methods_dmz_ext.html">Methods</a></li>
+							</ul>
+				</td>
+		<tr>
+</table>		</div>
+	</div>
+	
+	<div id="nav2">
+		<a name="top">&nbsp;</a>
+		<a id="nav_toggle" href="#">
+			<img src="./images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="Toggle Table of Contents" alt="Toggle Table of Contents" />
+		</a>
+	</div>
+	
+	<div id="masthead">
+		<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+			<tr>
+				<td><h1>GoodForm</h1></td>
+				<td id="breadcrumb_right"><a href="./toc.html">Table of Contents Page</a></td>
+			</tr>
+		</table>
+	</div>
+	<!-- END NAVIGATION -->
+	
+	<!-- START BREADCRUMB -->
+	<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+		<tr>
+			<td id="breadcrumb">
+				<a href="http://www.stucktogetherwithtape.com/user_guides/goodform/">GoodForm</a> 
+				&nbsp;&#8250;&nbsp;
+				<a href="..html">User Guide Home</a> 
+			</td>
+		</tr>
+	</table>
+	<!-- END BREADCRUMB -->
+	
+	<br clear="all" />	<!-- START CONTENT -->
+	<div id="content">
+		<h1>Textarea</h1>
+				
+		<p>There are two ways of adding a textarea field to your form object:</p>
+		
+		<h2>textarea (<em>string</em> name [, <em>string</em> value])</h2>
+				
+		<ul>
+			<li><strong>name</strong>: defines the elements name attribute, should be unique in the object | <strong>required</strong></li>
+			<li><strong>value</strong>: defines the default field value | <strong>optional</strong></li>
+		</ul>
+		
+		<h3>Example:</h3>
+		
+		<pre><code class="php">$this->goodform->textarea('about_me', 'Lorem ipsum dolor sit amet.');</code></pre>
+		
+		<p>Will produce the following HTML:</p>
+		
+		<pre><code class="html">&lt;textarea name="about_me" &gt;Lorem ipsum dolor sit amet.&lt;/textarea&gt;</code></pre>
+		 d
+		<h2>textarea (<em>array</em> attributes)</h2>
+		
+		<ul>
+			<li><strong>attributes</strong>: an associative array specifying attributes of the field element.</li>
+		</ul>
+		
+		<p class="note">All <strong>attributes</strong> in this array will be converted to HTML element attributes. <kbd>GoodForm</kbd> <strong>will not</strong> check if these attributes are HTML valid. The only exceptions to this are the <a href="./special_attributes.html">Special attributes</a> that are not passed to the elements attribute string.</p>
+		
+		<h3>Example:</h3>
+		
+		<pre><code class="php">$attr = array(
+	'name' 	=> 'about_me',
+	'value'	=> 'Lorem ipsum dolor sit amet.',
+	'rows'	=> 30,
+	'cols'	=> 15
+);
+
+$this->goodform->textarea($attr);</code></pre>
+
+		<p>Will produce the following HTML:</p>
+	
+		<pre><code class="html">&lt;textarea name="about_me" rows="30" cols="15"&gt;Lorem ipsum dolor sit amet.&lt;/textarea&gt;</code></pre>
+			
+	</div>
+	<!-- END CONTENT -->
+	<!-- START FOOTER -->	
+	<div id="footer">
+		<p><a href="#top">Top of Page</a></p>
+		<div id="copyrights">
+			<p>
+				<a href="http://www.stucktogetherwithtape.com/user_guides/goodform/">GoodForm v1.3.1</a> 
+				&nbsp;&middot;&nbsp; Copyright &copy; 2009-2010 &nbsp;&middot;&nbsp; 
+				<a href="http://www.stucktogetherwithtape.com/">Jim Wardlaw</a>			</p>
+			<p>
+				<a href="http://codeigniter.com">CodeIgniter</a> 
+				&nbsp;&middot;&nbsp; Copyright &#169; 2006-2008 &nbsp;&middot;&nbsp; 
+				<a href="http://ellislab.com/">Ellislab, Inc.</a> 
+			</p>
+		</div>
+	</div>
+	<!-- END CONTENT -->
+
+</body>
+</html>

@@ -108,35 +108,24 @@ legend {
 	margin: 0 0 10px 10px;
 }
 
-.vert-input-group {
+
+/* Input Groups */
+.horizontal-input-group,
+.vertical-input-group {
 	margin-bottom: 10px;
 }
-
-	.vert-input-group input {
-		clear: left;
-	}
-	
-	.vert-input-group .label {
-		clear: right;
-	}
-	
-	.vert-input-group input,
-	.vert-input-group .label {
-		display: block;
+	.horizontal-input-group input,
+	.horizontal-input-group label,
+	.vertical-input-group input,
+	.vertical-input-group label {
 		float: left;
+		margin: 0 10px 0 0;
 	}
 
-.optgroup {
-}
-
-	.optgroup .optgroup-label {
-		color: #666;
-		font-weight: bold;
-		margin: 0 0 5px 0;
-	}
-	
-	.optgroup .input-group{
-		padding-left: 10px;
+	.horizontal-input-group label,
+	.vertical-input-group label
+	{
+		font-weight: normal;
 	}
 
 /* Google Buttons */

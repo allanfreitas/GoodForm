@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head >
+		<title>Getting Started</title>
+		<meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+		
+		<link href="./css/userguide.css" media="screen" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="./js/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="./js/jquery.nav.js"></script>
+		<script type="text/javascript" src="./js/chili.js"></script>
+		<script type="text/javascript" src="./js/chili/jquery.chili-2.2.js"></script>
+		<script type="text/javascript" src="./js/chili/recipes.js"></script>
+		
+	</head>
+
+<body>
+
+	<!-- START NAVIGATION -->
+	<div id="nav">
+		<div id="nav_inner">
+			<table cellpadding="0" cellspaceing="0" border="0" style="width:98%">
+	<tr>
+			<td class="td" valign="top">
+					<h3></h3>
+			<ul>
+								<li><a href="./index.html">User Guide Home</a></li>
+								<li><a href="./toc.html">Table of Contents</a></li>
+							</ul>
+					<h3>Basic Info</h3>
+			<ul>
+								<li><a href="./change_log.html">Change Log</a></li>
+								<li><a href="./server_req.html">Server Requirements</a></li>
+								<li><a href="./troubleshooting.html">Troubleshooting</a></li>
+								<li><a href="./roadmap.html">Roadmap</a></li>
+							</ul>
+					<h3>Installation</h3>
+			<ul>
+								<li><a href="./downloading.html">Downloading</a></li>
+								<li><a href="./installation.html">Installation</a></li>
+								<li><a href="./getting_started.html">Getting Started</a></li>
+								<li><a href="./config.html">Configuration</a></li>
+							</ul>
+				</td>
+			<td class="td" valign="top">
+					<h3>Input Methods</h3>
+			<ul>
+								<li><a href="./input_list.html">List of Inputs</a></li>
+								<li><a href="./text_input.html">Text Input</a></li>
+								<li><a href="./password_input.html">Password Input</a></li>
+								<li><a href="./upload_input.html">Upload Input</a></li>
+								<li><a href="./hidden_input.html">Hidden Input</a></li>
+								<li><a href="./image_input.html">Image Input</a></li>
+								<li><a href="./reset_input.html">Reset Input</a></li>
+								<li><a href="./submit_input.html">Submit Input</a></li>
+								<li><a href="./checkbox_input.html">Checkbox Input</a></li>
+								<li><a href="./radio_input.html">Radio Input</a></li>
+								<li><a href="./dropdown.html">Dropdown</a></li>
+								<li><a href="./textarea.html">Textarea</a></li>
+								<li><a href="./button.html">Button</a></li>
+							</ul>
+				</td>
+			<td class="td" valign="top">
+					<h3>Presentation Methods</h3>
+			<ul>
+								<li><a href="./label.html">Label</a></li>
+								<li><a href="./tooltip.html">Tooltip</a></li>
+								<li><a href="./error.html">Error</a></li>
+								<li><a href="./clear.html">Clear</a></li>
+								<li><a href="./fieldset.html">Fieldset</a></li>
+							</ul>
+					<h3>Other Features</h3>
+			<ul>
+								<li><a href="./special_attributes.html">Special Attributes</a></li>
+								<li><a href="./validation.html">Form Validation</a></li>
+							</ul>
+				</td>
+			<td class="td" valign="top">
+					<h3>Generating your Form</h3>
+			<ul>
+								<li><a href="./generate.html">Generate</a></li>
+							</ul>
+					<h3>DMZ Datamapper Extension</h3>
+			<ul>
+								<li><a href="./installing_dmz_ext.html">Installation</a></li>
+								<li><a href="./models_dmz_ext.html">Preparing the Models</a></li>
+								<li><a href="./methods_dmz_ext.html">Methods</a></li>
+							</ul>
+				</td>
+		<tr>
+</table>		</div>
+	</div>
+	
+	<div id="nav2">
+		<a name="top">&nbsp;</a>
+		<a id="nav_toggle" href="#">
+			<img src="./images/nav_toggle_darker.jpg" width="154" height="43" border="0" title="Toggle Table of Contents" alt="Toggle Table of Contents" />
+		</a>
+	</div>
+	
+	<div id="masthead">
+		<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+			<tr>
+				<td><h1>GoodForm</h1></td>
+				<td id="breadcrumb_right"><a href="./toc.html">Table of Contents Page</a></td>
+			</tr>
+		</table>
+	</div>
+	<!-- END NAVIGATION -->
+	
+	<!-- START BREADCRUMB -->
+	<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+		<tr>
+			<td id="breadcrumb">
+				<a href="http://www.stucktogetherwithtape.com/user_guides/goodform/">GoodForm</a> 
+				&nbsp;&#8250;&nbsp;
+				<a href="..html">User Guide Home</a> 
+			</td>
+		</tr>
+	</table>
+	<!-- END BREADCRUMB -->
+	
+	<br clear="all" />	<!-- START CONTENT -->
+	<div id="content">
+	
+		<h1>Getting Started</h1>
+		
+		<p>This section will outline common usage of GoodForm. Please refere to the <dfn>methods</dfn> section for further more detailed examples.</p>
+		
+		<h2>A Simple Example</h2>
+		
+		<p>Most of the time you will be calling the GoodForm Object from within you controller. Below is a simple controller that uses GoodForm to produce a contact form.</p>
+		
+		<h3>The Controller</h3>
+		
+		<p>The Contact Form is contains four form elements and a submit button. Each field is added to the form one at a time in the order you wish them to appear. All the methods take two parameters or an associative array. With the associative array you can define field attributes for them element, e.g. class, id, size. There are a few <strong>special</strong> attributes that are used to create extra form items. These are:</p>
+		<ul>
+			<li><var>label</var> - The fields label</li>
+			<li><var>description</var> - A brief description of the field</li>
+			<li><var>error</var> - Any validation errors or warning you wish to give the user</li>
+		</ul>
+		<p>These elements will not be added to the field tag but will instead create seperate form elements, any others however will, so make sure you name your attributes correctly else your form will fail to validate with the W3C standards.</p>
+		
+		<pre class="ln-"><code class="php">// load Goodform library
+$this->load->library('goodform');
+
+$this->goodform	
+	// add a label for the name fields
+	->label('Name', 'first_name')
+	// add text input
+	->text('first_name', 'Joe')
+	// custom HTML
+	->html('<span> - </span>')
+	// add text input
+	->text('last_name', 'Wardlaw')
+	// clear floats hack
+	->clear()
+	// clear add a tooltip
+	->tooltip('Enter your name...')
+	// add input element with label and tooltip
+	->text(array('name' => 'email',
+				'value' => 'jim@gmail.com',
+				'label' => 'Email',
+				'size' => 40,
+				'description' => 'please enter a valid email address'))
+	// clear floats hack
+	->clear()
+	// add textarea for message
+	->textarea(array('name' => 'message',
+			 		'cols' => 40,
+			 		'rows' => 10))
+	// clear floats hack
+	->clear()
+	// add checkbox input
+	->checkbox(array('name' => 'spam_me',
+					'value' => 1,
+					'checked' => 'checked',
+					'label' => 'Spam?'))
+	// clear floats hack
+	->clear()
+	->submit('submit', 'Send');
+
+	// construct the form passing the action url
+	$form = $this->goodform->generate('myform/submit');</code></pre>
+		
+		<h3>The HTML Output</h3>
+		
+		<pre class="ln-"><code class="html">&lt;form action="http://localhost/stwt/www/myform/submit" method="post"&gt;
+		
+	&lt;label for="first_name"&gt;Name&lt;/label&gt;
+	&lt;input name="first_name" value="Joe" type="text"/&gt;
+	&lt;span&gt; - &lt;/span&gt;
+	&lt;input name="last_name" value="Wardlaw" type="text"/&gt;
+
+	&lt;div class="clear"&gt;&lt;/div&gt;
+	
+	&lt;p class="tooltip"&gt;Enter your name...&lt;/p&gt;
+	&lt;label for="email"&gt;Email&lt;/label&gt;
+	&lt;input name="email" value="jim@gmail.com" size="40" type="text"/&gt;
+	&lt;p class="email-tooltip tooltip"&gt;please enter a valid email address&lt;/p&gt;
+
+	&lt;div class="clear"&gt;&lt;/div&gt;
+
+	&lt;textarea name="message" cols="40" rows="10"&gt;&lt;/textarea&gt;
+	
+	&lt;div class="clear"&gt;&lt;/div&gt;
+	
+	&lt;label for="spam_me"&gt;Spam?&lt;/label&gt;&lt;input name="spam_me" value="1" checked="checked" type="checkbox"/&gt;
+
+	&lt;div class="clear"&gt;&lt;/div&gt;
+	
+	&lt;input name="submit" value="Send" type="submit"/&gt;
+
+&lt;/form&gt;</code></pre>
+		
+		<p>There you have it. The <var>form</var> variable now contains HTML to render the contact form.</p>
+	</div>
+	<!-- END CONTENT -->
+	<!-- START FOOTER -->	
+	<div id="footer">
+		<p><a href="#top">Top of Page</a></p>
+		<div id="copyrights">
+			<p>
+				<a href="http://www.stucktogetherwithtape.com/user_guides/goodform/">GoodForm v1.3.1</a> 
+				&nbsp;&middot;&nbsp; Copyright &copy; 2009-2010 &nbsp;&middot;&nbsp; 
+				<a href="http://www.stucktogetherwithtape.com/">Jim Wardlaw</a>			</p>
+			<p>
+				<a href="http://codeigniter.com">CodeIgniter</a> 
+				&nbsp;&middot;&nbsp; Copyright &#169; 2006-2008 &nbsp;&middot;&nbsp; 
+				<a href="http://ellislab.com/">Ellislab, Inc.</a> 
+			</p>
+		</div>
+	</div>
+	<!-- END CONTENT -->
+
+</body>
+</html>

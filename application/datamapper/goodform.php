@@ -21,7 +21,7 @@
  * @category	DataMapper Extensions
  * @author  	Jim Wardlaw
  * @link    	http://www.stucktogetherwithtape.com/code/
- * @version 	1.3
+ * @version 	1.3.1
  */
 
 // --------------------------------------------------------------------------
@@ -82,7 +82,7 @@ class DMZ_Goodform {
 	* @param	array	-	array of fields to add to array
 	* @return	boolean
 	*/
-	public function post_form($object, $fields='')
+	public function post_form($object, &$goodform, $fields='')
 	{
 		// get global CI instance
 		$CI =& get_instance();
@@ -93,13 +93,46 @@ class DMZ_Goodform {
 			$fields = $object->fields;
 		}
 		
-		foreach($fields as $field)
+		foreach($goodform->fields as $field)
 		{
 			// check field value has been posted
 			if ($CI->input->post($field) !== FALSE)
 				// assign posted value to object field
 				$object->{$field} = $CI->input->post($field);
 		}
+	}
+	
+   /**
+	* Updates a DM Goodform with posted data and errors
+	*
+	* @access	public
+	* @param	object 	-	instance of the DM Object calling this extension
+	* @param	object	-	reference to instance of goodform object
+	* @return	boolean
+	*/
+	public function update_form($object, &$goodform)
+	{		
+		// select all fields to update if not defined
+		foreach($goodform->fields as $field)
+		{
+			if(isset($_POST[$field]))
+			{
+				// update form with posted value
+				$goodform->elements[$field]['value'] = $_POST[$field];
+			
+				log_message('error', $field.' = '.$_POST[$field]);
+			}
+						
+			if (isset($object->error->{$field}))
+			{
+				// update form with error message
+				$goodform->elements[$field]['error'] = $object->error->{$field};
+			
+				log_message('error', $field.' = '.print_r($object->error, TRUE));
+			}
+		}
+		
+		
 	}
 	
    /**

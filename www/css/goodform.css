@@ -18,7 +18,6 @@ label {
 	.gf-inline label {
 		display: block;
 		float: left;
-		font-size: 14px;
 		font-weight: bold;
 		line-height: 20px;
 		margin: 0 10px 10px 0;
@@ -30,6 +29,7 @@ form a {
 	font-size: 14px;
 	line-height: 20px;
 	margin-bottom: 5px;
+	position: relative;
 }
 	
 .tooltip {	
@@ -40,13 +40,66 @@ form a {
 	line-height: 15px;
 }
 
-.error {
-	border:solid 1px #CC0000; 
-	background:#F7CBCA;
-	color:#CC0000;
-	font-size: 11px;
-	font-weight:bold;
-	padding:4px;
+/* Error Styles for PHP validation */
+p.error {
+	border: 1px #c11d1d solid;
+	background-color: #f01d24;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f01d24), to(#c11d1d));  
+	background: -moz-linear-gradient(top, #f01d24, #c11d1d);
+	color: white;
+	font-size: 13px;
+	font-weight: normal;
+	padding:3px 5px;
+	text-align:center;
+	text-shadow: 0px 2px 3px #f01d24;
+	width: 100%;
+}
+	p.error a,
+	label.error a {
+		color: #f9c700;
+	}
+	
+/* Error Styles for jQuery validation */
+label.invalid,
+label.valid {
+	color: #FFF;
+	display: inline;
+	font-size: 16px;
+	padding: 3px 5px;
+	margin: 0 0 0 5px;
+	text-shadow: 0px 2px 3px #f01d24;
+	width: auto;
+}
+
+label.invalid {
+	border: 1px #c11d1d solid;
+	background-color: #f01d24;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f01d24), to(#c11d1d));  
+	background: -moz-linear-gradient(top, #f01d24, #c11d1d);
+	text-shadow: 0px 2px 3px #f01d24;
+}
+
+/* Fields with Validation Passed */
+label.valid {
+	border-color: #42a100;
+	background-color: #7dc800;
+	background: -webkit-gradient(linear, left top, left bottom, from(#7dc800), to(#42a100));  
+	background: -moz-linear-gradient(top, #7dc800, #42a100);
+	text-shadow: 0px 2px 3px #7dc800;
+}
+
+/* Error Tooltips */
+.error-tip {
+	color: #FFF;
+	border: 1px #c11d1d solid;
+	background-color: #f01d24;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f01d24), to(#c11d1d));  
+	background: -moz-linear-gradient(top, #f01d24, #c11d1d);
+	display: absolute;
+	font-size: 16px;
+	padding: 3px 5px;
+	text-shadow: 0px 2px 3px #f01d24;
+	width: auto;
 }
 
 input,
@@ -77,9 +130,24 @@ textarea {
 	border-style: solid;
 }
 
-textarea {
-	height: 100px;
-	width: 250px;
+/* Fields with Focus */
+button:focus,
+a.g-btn:focus,
+input:focus,
+textarea:focus {
+	border: 1px #66AAEE solid;box-shadow: 5px 5px 2px black;
+	-moz-box-shadow: 0px 0px 2px #66AAEE;
+	-webkit-box-shadow: 0px 0px 2px #66AAEE;
+}
+
+/* Fields with Validation Errors */
+input.error,
+input.invalid,
+textarea.error,
+textarea.invalid {
+	border: 1px #c11d1d solid;box-shadow: 5px 5px 2px black;
+	-moz-box-shadow: 0px 0px 2px #f01d24;
+	-webkit-box-shadow: 0px 0px 2px #f01d24;
 }
 
 fieldset {
@@ -108,7 +176,6 @@ legend {
 	margin: 0 0 10px 10px;
 }
 
-
 /* Input Groups */
 .horizontal-input-group,
 .vertical-input-group {
@@ -128,6 +195,19 @@ legend {
 		font-weight: normal;
 	}
 
+.optgroup {
+}
+
+	.optgroup .optgroup-label {
+		color: #666;
+		font-weight: bold;
+		margin: 0 0 5px 0;
+	}
+	
+	.optgroup .input-group{
+		padding-left: 10px;
+	}
+
 /* Google Buttons */
 button,
 a.g-btn,
@@ -135,6 +215,7 @@ input[type=submit],
 input[type=reset]  {
 	padding: 6px 10px;
 	border: solid 1px rgb(153, 153, 153);
+	background-color: #EEE;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(255, 255, 255)), to(rgb(221, 221, 221)));
 	color: #333;
 	cursor: pointer;
@@ -145,6 +226,7 @@ input[type=reset]  {
 	text-decoration: none;
 	text-align: center;
 	text-shadow: 0px 1px 1px rgba(255,255,255,1);
+	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px 2px;
 }
 	a.g-btn:link,

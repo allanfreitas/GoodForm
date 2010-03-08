@@ -12,16 +12,14 @@
  *   the goodform object.
  *
  * CHANGES
- * + added code to auto generate related lookup values to has_one form fields
- * + Added title to allowed html params
- * + Allowed datamapper field attributes now defined in goodform config
- * + Added 'options' method to return an array of related options to be used in dropdown 
+ * + convert_rules() takes the validation array and turns it into a string so goodform
+ *	 can read validation rules and construct metadata for jquery validation plugin
  *
  * @license 	MIT License
  * @category	DataMapper Extensions
  * @author  	Jim Wardlaw
  * @link    	http://www.stucktogetherwithtape.com/code/
- * @version 	1.3.1
+ * @version 	1.3.2
  */
 
 // --------------------------------------------------------------------------
@@ -52,6 +50,9 @@ class DMZ_Goodform {
 	*/
 	public function form($object, &$goodform, $fields='')
 	{
+		// turn of CI validation as DM handels this for us
+		$ci_validation = FALSE;
+	
 		// select all fields if not defined
 		if(empty($fields))
 		{
@@ -203,6 +204,11 @@ class DMZ_Goodform {
 			$spec['options'] = $obj->options();
 		}
 		
+		// turn rules array into pipe seperated string
+		$spec['validation'] = $this->convert_rules($spec);
+		
+		//log_message('error', 'dm = '.print_r($spec, TRUE));
+		
 		// add form to gf object
 		return $goodform->{$input_type}($spec);
 	}
@@ -229,5 +235,30 @@ class DMZ_Goodform {
 			$options[(string)$o] = $o->id;
 		
 		return $options;
+	}
+
+   /**
+	* comment
+	*
+	* @access	public
+	* @param	string
+	* @return	string
+	*/
+	public function convert_rules($spec)
+	{
+		if(!isset($spec['rules']))
+			return '';
+		
+		$rule_array = array();
+		
+		foreach($spec['rules'] as $key => $value)
+		{
+			if(is_numeric($key))
+				$rule_array[] = $value;
+			else
+				$rule_array[] = $key.'['.$value.']';
+		}
+		
+		return implode('|', $rule_array);
 	}
 }

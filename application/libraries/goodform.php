@@ -9,15 +9,17 @@
  * @category	Librarys 
  * @author		Jim Wardlaw
  * @link		http://www.stucktogetherwithtape.com/code/goodform
- * @version 	1.3.1
+ * @version 	1.3.2
  *
  * CHANGES
  *
- * - added config options to input groups
- *		- cleaned up output code and included direction attribute (horizontal/verticle)
+ * - added new config 'force_field_id' to add id attribute to fields if they have none set
+ * - added attributes placeholder to input group config prefixes
+ * - added method prep_jquery_validation | constructs metadata class infomation to activate
+ * 	 in the jquery validation plugin
+ * - added global $ci_validation to prevent rules being added to the CI validation library
  *
- * - generate(FALSE) returns form contents without <form> element
- * - added item	- return specific form item
+ *
  */ 
 class Goodform {
 
@@ -29,6 +31,9 @@ class Goodform {
 
 	// flag if fieldset is open
 	public $open_fieldset = FALSE;
+	
+	// flag to add validation rules to CI validation library *HACK*
+	public $ci_validation = TRUE;
 
 	##########################
 	## UTILITY METHODS	 	##
@@ -181,10 +186,21 @@ class Goodform {
 						
 			if ($rules)
 			{
+				// convert rules to jquery validation classes
+				$spec = $this->prep_jquery_validation($spec, $rules);
+			
 				// get label element, use name if NULL
-				$label = $this->get_element($spec, 'label', $spec['name']);								
+				$label = $this->get_element($spec, 'label', $spec['name']);
+											
 				// if defined set validation rules for this element
 				$this->set_rules($spec['name'], $label, $rules);
+			}
+			
+			// is force field id set in config and not id set
+			if ($this->config->item('force_field_id', 'goodform') AND !isset($spec['id']))	
+			{
+				// if id is not set use field name
+				$spec['id'] = $spec['name'];
 			}
 			
 			// add to objects element array
@@ -574,6 +590,13 @@ class Goodform {
 				$this->set_rules($spec['name'], $label, $rules);
 			}
 			
+			// is force field id set in config and not id set
+			if ($this->config->item('force_field_id', 'goodform') AND !isset($spec['id']))	
+			{
+				// if id is not set use field name
+				$spec['id'] = $spec['name'];
+			}
+
 			// add to objects element array
 			$this->elements[$spec['name']] = $spec;
 			
@@ -697,6 +720,13 @@ class Goodform {
 				$this->set_rules($spec['name'], $label, $rules);
 			}
 			
+			// is force field id set in config and not id set
+			if ($this->config->item('force_field_id', 'goodform') AND !isset($spec['id']))	
+			{
+				// if id is not set use field name
+				$spec['id'] = $spec['name'];
+			}
+			
 			// add to objects element array
 			$this->elements[$spec['name']] = $spec;
 			
@@ -752,6 +782,13 @@ class Goodform {
 								
 				// if defined set validation rules for this element
 				$this->set_rules($spec['name'], $label, $rules);
+			}
+			
+			// is force field id set in config and not id set
+			if ($this->config->item('force_field_id', 'goodform') AND !isset($spec['id']))	
+			{
+				// if id is not set use field name
+				$spec['id'] = $spec['name'];
 			}
 			
 			// add to objects element array
@@ -832,6 +869,13 @@ class Goodform {
 				$this->set_rules($spec['name'], $label, $rules);
 			}
 			
+			// is force field id set in config and not id set
+			if ($this->config->item('force_field_id', 'goodform') AND !isset($spec['id']))	
+			{
+				// if id is not set use field name
+				$spec['id'] = $spec['name'];
+			}
+			
 			// add to objects element array
 			$this->elements[$spec['name']] = $spec;
 			
@@ -904,6 +948,13 @@ class Goodform {
 								
 				// if defined set validation rules for this element
 				$this->set_rules($spec['name'], $label, $rules);
+			}
+			
+			// is force field id set in config and not id set
+			if ($this->config->item('force_field_id', 'goodform') AND !isset($spec['id']))	
+			{
+				// if id is not set use field name
+				$spec['id'] = $spec['name'];
 			}
 			
 			// add to objects element array
@@ -1228,7 +1279,10 @@ class Goodform {
 	 */
 	public function set_rules($field, $name, $rules = '')
 	{
-		$this->form_validation->set_rules($field, $name, $rules);
+		// make sure CI validation is active
+		if($this->ci_validation)
+			// add rules
+			$this->form_validation->set_rules($field, $name, $rules);
 	}
 
 	/**
@@ -1555,6 +1609,30 @@ class Goodform {
 		// get config options
 		$prefix = $this->config->item('input_group_'.$style.'_prefix', 'goodform');
 		$suffix = $this->config->item('input_group_'.$style.'_suffix', 'goodform');
+		
+		// check if attributes placeholder is set in prefix string
+		if(strpbrk($prefix, '%att%'))
+		{
+			// make a copy of the attributes array
+			$attr = $attributes;
+			
+			// remove name, type and value attributes as this is not a form field
+			unset($attr['name']);
+			unset($attr['type']);
+			unset($attr['value']);
+			
+			// get attribute string
+			$attr_str = $this->array_to_attributes($attr);
+			
+			if($attr_str)
+				// replace with id attribute if set
+				$prefix = str_replace('%att%', $attr_str, $prefix);
+			else
+				// else remove		
+				$prefix = str_replace('%att%', '', $prefix);
+		}
+		
+		
 		
 		$option_prefix = $this->config->item('input_group_'.$style.'_option_prefix', 'goodform');
 		$option_suffix = $this->config->item('input_group_'.$style.'_option_suffix', 'goodform');
@@ -1883,6 +1961,88 @@ class Goodform {
 		 	
 		// return array
 		return $attributes;
+	}
+
+   /**
+	* adds css classes to input field for jquery validation plugin
+	*
+	* @access	private
+	* @param	string
+	* @return	string
+	*/
+	private function prep_jquery_validation($attr, $rules)
+	{
+		// make sure jquery validation is active in config
+		if($this->config->item('jquery_validation', 'goodform'))
+		{
+			// get existing classes and explode into an array
+			$class_array = explode(' ', $this->get_element($attr, 'class', ''));
+			
+			// get class key from config
+			$class_key = $this->config->item('jquery_validation_classes', 'goodform');
+			
+			// explode rules into array
+			$rules = explode('|', $rules);
+			
+			// create array for metadata validation rules
+			$metadata = array();
+			
+			// loop through field validation rules
+			foreach($rules as $ci_rule)
+			{
+				// explode parameter from rule
+				$array = explode('[', $ci_rule);
+				
+				$rule = $array[0];
+				
+				if(isset($array[1]))
+					$param = str_replace(']', '', $array[1]);
+				else
+					$param = TRUE;
+	
+				//log_message('error', 'rule = '.$rule.' param = '.$param);
+			
+				// check if ci_rule exists in class key and it is not empty
+				if(isset($class_key[$ci_rule]) AND !empty($class_key[$ci_rule]))
+				{
+					// add jquery class to attribute array
+					$metadata[$class_key[$rule]] = $param;
+				}
+				/*else
+				{
+					log_message('error', 'cant find class for validation rule '.$ci_rule);
+				}*/
+			}
+			
+			if($metadata)
+			{
+				$meta_string = '{validate:{';
+				
+				foreach($metadata as $key => $value)
+				{
+					if($value === TRUE)
+						$meta_string .= $key." : true,";
+					else if($value === FALSE)
+						$meta_string .= $key." : false,";
+					else
+						$meta_string .= $key." : '".$value."',";	
+				}
+				
+				$meta_string .= '}}';
+				
+				// add metadata json obj to class
+				$class_array[] = $meta_string;
+				
+				log_message('error', 'metadata class = '.$meta_string);
+			}
+					
+			if($class_array)
+				// implode class array back to string
+				$attr['class'] = implode(' ', $class_array);
+		}
+		
+		// return attribute array
+		return $attr;
 	}
 
    /**

@@ -1,3 +1,24 @@
+Version 1.4
+-----------
+Release Date: March 9, 2010
+
+	Changes to DM Plugin
+	- The datamapper plugin now accepts related objects in the for() field declaration!
+	- To accommodate post_form() returns an array of posted related models ready to pass to save() and remove().
+	- If has_one models are posted post_form() will return an array ready to be passed to the save() method.
+		e.g.
+		$related = $obj->post_form($gf); 
+		 
+		$obj->save($related);
+	- If has_many models are posted post_form() will return a 2-D array. The first element contains new related records to save to the object. The second element containts related records to delete from the object with the delete() method.
+		e.g.
+		list($related, $unrelated) = $obj->post_form($gf); 
+ 
+		$obj->save($related); 
+		 
+		if($unrelate) 
+		    $obj->delete($unrelated);
+	
 Version 1.3.2
 -----------
 Release Date: February 15, 2010

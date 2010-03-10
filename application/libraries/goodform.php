@@ -9,15 +9,11 @@
  * @category	Librarys 
  * @author		Jim Wardlaw
  * @link		http://www.stucktogetherwithtape.com/code/goodform
- * @version 	1.3.2
+ * @version 	1.3.3
  *
  * CHANGES
  *
- * - added new config 'force_field_id' to add id attribute to fields if they have none set
- * - added attributes placeholder to input group config prefixes
- * - added method prep_jquery_validation | constructs metadata class infomation to activate
- * 	 in the jquery validation plugin
- * - added global $ci_validation to prevent rules being added to the CI validation library
+ * - added ci_validation to the config file
  *
  *
  */ 
@@ -50,6 +46,7 @@ class Goodform {
 		$this->load_config();
 		
 		$this->load_libraries();
+		
 	}	
 	
    /**
@@ -68,6 +65,9 @@ class Goodform {
 		
 		// load goodform config vars
 		$this->config->load('goodform', TRUE, TRUE);
+		
+		// set validation mode
+		$this->ci_validation = $this->config->item('ci_validation', 'goodform');
 	}
 	
    /**
@@ -2033,7 +2033,7 @@ class Goodform {
 				// add metadata json obj to class
 				$class_array[] = $meta_string;
 				
-				log_message('error', 'metadata class = '.$meta_string);
+				//log_message('error', 'metadata class = '.$meta_string);
 			}
 					
 			if($class_array)

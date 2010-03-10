@@ -19,6 +19,13 @@ $config['tooltip_suffix'] = '-tooltip';
 // String added to each required Lable element
 $config['required_suffix'] = ' <span class="c-red">*</span>';
 
+// if true, Goodform will auto add rules to the ci_validation library
+$config['ci_validation'] = TRUE;
+
+// Force GoodForm to use field names as their id
+// This helps keep forms valid as label 'for' 
+// attributes require an element to exist with that id
+$config['force_field_id'] = TRUE;
 
 ## HORIZONTAL OPTION GROUPS  ##
 
@@ -58,11 +65,6 @@ $config['input_group_v_optgroup_suffix'] = '</li>';
 // Optgroup Label
 $config['input_group_v_optgroup_label_prefix'] = '<h6>';
 $config['input_group_v_optgroup_label_suffix'] = '</h6>';
-
-// Force GoodForm to use field names as their id
-// This helps keep forms valid as label 'for' 
-// attributes require an element to exist with that id
-$config['force_field_id'] = FALSE;
 
 
 ## JQUERY VALIDATION INTERGRATION ##
